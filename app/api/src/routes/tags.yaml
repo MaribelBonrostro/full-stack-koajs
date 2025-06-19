@@ -1,0 +1,9 @@
+tags:
+  - name: Account
+    description: Company account
+
+  - name: Auth
+    description: Authorization Server
+
+  - name: User
+    description: User service
