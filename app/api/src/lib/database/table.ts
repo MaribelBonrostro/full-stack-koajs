@@ -1,6 +1,12 @@
 import type { Knex } from 'knex';
 
-import type { AccountRecord, UserAccountRecord, UserRecord } from './schema';
+import type {
+  AccountRecord,
+  AccountTagRecord,
+  UserAccountRecord,
+  UserAccountTagRecord,
+  UserRecord,
+} from './schema';
 
 declare module 'knex/types/tables' {
   interface Tables {
@@ -26,6 +32,18 @@ declare module 'knex/types/tables' {
       UserAccountRecord,
       UserAccountRecord,
       UserAccountRecord
+    >;
+    account_tags: Knex.CompositeTableType<
+      AccountTagRecord,
+      AccountTagRecord,
+      Partial<Pick<AccountTagRecord, 'name' | 'updated_at'>>,
+      Omit<AccountTagRecord, 'id' | 'created_at'>
+    >;
+    user_account_tags: Knex.CompositeTableType<
+      UserAccountTagRecord,
+      UserAccountTagRecord,
+      UserAccountTagRecord,
+      UserAccountTagRecord
     >;
   }
 }
