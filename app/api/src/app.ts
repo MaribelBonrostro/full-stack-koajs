@@ -1,6 +1,7 @@
 import { applicationFactory, config } from './lib';
 import {
   accountRouteFactory,
+  accountTagsRouteFactory,
   authRouteFactory,
   meRouteFactory,
 } from './routes';
@@ -15,5 +16,8 @@ application.use(
 );
 application.use(
   accountRouteFactory({ publicKey: config.jwks.publicKey }).attach()
+);
+application.use(
+  accountTagsRouteFactory({ publicKey: config.jwks.publicKey }).attach()
 );
 application.use(meRouteFactory({ publicKey: config.jwks.publicKey }).attach());
