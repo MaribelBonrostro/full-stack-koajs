@@ -8,6 +8,21 @@ import {
 
 export const application = applicationFactory(config);
 
+import cors from '@koa/cors';
+
+application.use(
+  cors({
+    origin: ctx => {
+      const allowed = [config.cors?.origin];
+      const origin = ctx.request.header.origin;
+      if (origin && allowed.includes(origin)) {
+        return origin;
+      }
+      return '';
+    },
+    credentials: true,
+  })
+);
 application.use(
   authRouteFactory({
     accessToken: { expiry: config.cookie.access.expiry },

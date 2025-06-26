@@ -31,6 +31,7 @@
     "@types/cookie": "^0.6.0",
     "@types/jest": "^29.5.12",
     "@types/knex": "^0.16.1",
+    "@types/koa__cors": "^5.0.0",
     "@types/koa__router": "^12.0.4",
     "@types/supertest": "^6.0.2",
     "@types/swagger-jsdoc": "^6.0.4",
