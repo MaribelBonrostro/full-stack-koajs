@@ -9,3 +9,13 @@ variable "aws_region" {
 variable "aws_role_name" {
   type = string
 }
+
+
+variable "lambda_name" {
+  type = string
+}
+
+
+variable "ecr_image_uri" {
+  type = string
+}
