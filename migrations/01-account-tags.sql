@@ -33,7 +33,6 @@ CREATE TABLE IF NOT EXISTS accounts (
 );
 
 
--- account_tags table
 CREATE TABLE IF NOT EXISTS account_tags (
   id  UUID NOT NULL PRIMARY KEY,
   account_id UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
@@ -42,9 +41,19 @@ CREATE TABLE IF NOT EXISTS account_tags (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
--- user_account_tags table (join table)
 CREATE TABLE IF NOT EXISTS user_account_tags (
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  tag_id UUID NOT NULL REFERENCES account_tags(id) ON DELETE CASCADE,
-  PRIMARY KEY (user_id, tag_id)
+  user_id UUID NOT NULL,
+  tag_id UUID NOT NULL,
+
+  CONSTRAINT pk_user_account_tag PRIMARY KEY (user_id, tag_id),
+
+  CONSTRAINT fk_user_account_tag_user
+    FOREIGN KEY (user_id)
+    REFERENCES users (id)
+    ON DELETE CASCADE,
+
+  CONSTRAINT fk_user_account_tag_tag
+    FOREIGN KEY (tag_id)
+    REFERENCES account_tags (id)
+    ON DELETE CASCADE
 );
