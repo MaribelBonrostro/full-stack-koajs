@@ -7,6 +7,13 @@ We use Docker to maintain consistency across development environments. The prima
 
 ---
 
+### Local Development
+
+Uses `Dockerfile.local` for a standard Node.js server:
+
+````sh
+docker-compose up
+
 ## 🔧 Setup
 
 ```bash
@@ -15,7 +22,7 @@ docker-compose build
 
 # 2. Start the api container
 docker-compose up
-```
+````
 
 ### Accessing Services
 

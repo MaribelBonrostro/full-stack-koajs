@@ -25,13 +25,14 @@ services:
   api:
     build:
       context: ./app/api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     restart: on-failure
     depends_on:
       - db
     ports:
       - 9000:9000
     environment:
+      NODE_ENV: development
       PORT: 9000
     volumes:
       - ./app/api:/opt/app
