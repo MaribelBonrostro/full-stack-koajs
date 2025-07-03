@@ -40,3 +40,22 @@ jobs:
       - name: Tag Docker image
         run: |
           docker tag $ECR_REPOSITORY:$IMAGE_TAG ${{ steps.login-ecr.outputs.registry }}/${ECR_REPOSITORY}:$IMAGE_TAG
+
+      - name: Push Docker image to ECR
+        run: |
+          docker push ${{ steps.login-ecr.outputs.registry }}/${ECR_REPOSITORY}:$IMAGE_TAG
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform
+
+      - name: Write tfvars to file
+        run: echo "${{ secrets.TERRAFORM_TFVARS }}" > terraform.tfvars
+        working-directory: ./terraform
+
+      - name: Terraform Plan
+        run: terraform plan -var-file="terraform.tfvars"
+        working-directory: ./terraform
