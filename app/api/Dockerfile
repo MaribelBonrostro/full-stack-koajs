@@ -1,44 +1,32 @@
-##
-## 1. Add multi-stage build steps
-##
-
-
-##
-## 2. Set the runtime image
-##
-FROM ... AS runtime
-
-ENV NODE_ENV production
-ENV NODE_CONFIG_STRICT_MODE false
-ENV VERSION ${VERSION}
-ENV LOG_LEVEL error
+# Builder stage: full Node.js 22 image with build tools
+FROM node:22 AS builder
 
 WORKDIR /opt/app
 
-RUN apt-get update && apt-get install -y --no-install-recommends dumb-init
+COPY package.json package-lock.json ./
+RUN npm ci
 
-##
-## 3. Add runtime dependencies
-##
+COPY . .
+RUN npm run precompile && npm run compile
 
-##
-## 4. Add transpiled project files
-##
+# Final stage: minimal AWS Lambda Node.js 22 runtime image
+FROM public.ecr.aws/lambda/nodejs:22
+
+ENV NODE_ENV=production
+ENV NODE_CONFIG_STRICT_MODE=false
+ENV VERSION=${VERSION}
+ENV LOG_LEVEL=error
+
+WORKDIR /var/task
+
+COPY --from=builder /opt/app/package.json ./
+COPY --from=builder /opt/app/package-lock.json ./
+COPY --from=builder /opt/app/node_modules ./node_modules
+COPY --from=builder /opt/app/dist ./dist
+COPY --from=builder /opt/app/config ./config
 
 
-##
-## 5. Add any other files needed
-##
+RUN ls -l dist
+RUN ls -l dist/src || true
 
-
-##
-## 6. Optional considerations:
-##
-##  - Container security
-##  - File Permissions
-##
-
-ENTRYPOINT [ "/usr/bin/dumb-init", "--" ]
-
-## 7. Add the command to run the application
-CMD []
+CMD ["dist/lambda.handler"]

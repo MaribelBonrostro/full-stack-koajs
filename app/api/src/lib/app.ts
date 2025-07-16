@@ -3,6 +3,7 @@ import type { LogLevel } from '@nokkel/monitoring';
 
 import {
   AccountService,
+  AccountTagService,
   AuthService,
   JwtService,
   UserService,
@@ -20,7 +21,7 @@ type Config = {
   };
   database: DatabaseConfig;
   log: { level: LogLevel };
-  cors?: { origin?: string };
+  cors?: { origin?: string; credentials?: boolean };
   jwks: { privateKey: string; publicKey: string };
 };
 
@@ -31,6 +32,7 @@ export function applicationFactory(config: Config) {
       logLevel: config.log.level,
       services: {
         account: new AccountService(),
+        accountTag: new AccountTagService(),
         auth: new AuthService(),
         db: new Database(config.database),
         jwt: new JwtService(config.jwks.privateKey, config.jwks.publicKey, {
@@ -40,7 +42,7 @@ export function applicationFactory(config: Config) {
         user: new UserService(),
       },
     },
-    cors: { origin: config.cors?.origin },
+    cors: { origin: config.cors?.origin, credentials: true },
     koa: {
       keys: config.cookie.keys,
     },
